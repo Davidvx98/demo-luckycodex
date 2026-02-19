@@ -3,10 +3,92 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 const apiUrl = import.meta.env.PUBLIC_API_URL;
 ---
 <DashboardLayout title="Tutoriales — LBOT">
-  <h1 class="text-2xl font-bold text-white mb-8">Tutoriales</h1>
-
-  <div id="tutorials-content" class="text-gray-400">Cargando...</div>
+  <div class="max-w-3xl">
+    <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Tutoriales</h1>
+    <p class="text-gray-500 text-sm mb-6 sm:mb-8">Gu&iacute;as en v&iacute;deo para sacar el m&aacute;ximo partido al bot.</p>
+    <div id="tutorials-content" class="text-gray-400 text-sm">Cargando...</div>
+  </div>
 </DashboardLayout>
+
+<script is:inline define:vars={{ apiUrl }}>
+  // Mapeo nombre → slug y metadatos
+  var TUTORIAL_META = {
+    'Introducci\u00f3n al bot': {
+      slug: 'intro',
+      desc: 'Primeros pasos, instalaci\u00f3n y configuraci\u00f3n b\u00e1sica del bot.',
+      duration: '5 min',
+      badge: 'B\u00e1sico',
+    },
+    'Configuraci\u00f3n avanzada': {
+      slug: 'avanzado',
+      desc: 'Ajustes de rutas, loot personalizado y optimizaci\u00f3n de Teras.',
+      duration: '43 min',
+      badge: 'Pro',
+    },
+    'Estrategias exclusivas': {
+      slug: 'estrategias',
+      desc: 'M\u00e9todos avanzados para multiplicar ganancias de Teras.',
+      duration: '48 min',
+      badge: 'Elite',
+    },
+  };
+
+  var BADGE_COLOR = {
+    'B\u00e1sico': 'bg-brand-600/20 text-brand-400',
+    'Pro':    'bg-purple-600/20 text-purple-400',
+    'Elite':  'bg-amber-600/20 text-amber-400',
+  };
+
+  async function loadTutorials() {
+    var el = document.getElementById('tutorials-content');
+    if (!el) return;
+    try {
+      var res = await fetch(apiUrl + '/api/dashboard/tutorials', { credentials: 'include' });
+      if (!res.ok) { window.location.href = '/'; return; }
+      var data = await res.json();
+      var tutorials = data.tutorials;
+
+      if (!tutorials.length) {
+        el.innerHTML = '<p class="text-gray-500 py-8 text-center">No hay tutoriales disponibles con tu plan actual.</p>';
+        return;
+      }
+
+      el.innerHTML = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">' +
+        tutorials.map(function(name) {
+          var meta  = TUTORIAL_META[name] || { slug: 'intro', desc: name, duration: '', badge: 'B\u00e1sico' };
+          var color = BADGE_COLOR[meta.badge] || 'bg-gray-700/30 text-gray-400';
+          return '<a href="/dashboard/tutorials/' + meta.slug + '" ' +
+            'class="bg-gray-900 border border-gray-800 hover:border-brand-600/60 rounded-2xl p-5 flex flex-col gap-3 transition-all hover:bg-gray-900/80 hover:-translate-y-0.5 group cursor-pointer">' +
+            '<div class="flex items-start justify-between gap-2">' +
+              '<div class="p-2.5 bg-brand-600/10 rounded-xl shrink-0 group-hover:bg-brand-600/20 transition">' +
+                '<svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">' +
+                  '<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>' +
+                  '<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>' +
+                '</svg>' +
+              '</div>' +
+              '<span class="text-xs font-semibold px-2 py-1 rounded-full ' + color + '">' + meta.badge + '</span>' +
+            '</div>' +
+            '<div>' +
+              '<h3 class="text-white font-semibold text-sm mb-1 group-hover:text-brand-300 transition">' + name + '</h3>' +
+              '<p class="text-gray-500 text-xs leading-relaxed">' + meta.desc + '</p>' +
+            '</div>' +
+            (meta.duration ? '<div class="flex items-center gap-1.5 text-xs text-gray-600 mt-auto pt-1">' +
+              '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>' +
+              meta.duration +
+              '<span class="text-gray-700">&middot;</span><span class="text-brand-500/70">Ver v&iacute;deo &rarr;</span>' +
+            '</div>' : '') +
+            '</a>';
+        }).join('') +
+      '</div>' +
+      '<p class="text-xs text-gray-600 mt-6">Los tutoriales se actualizan con cada nueva versi\u00f3n del bot.</p>';
+
+    } catch (e) {
+      el.innerHTML = '<p class="text-red-400">Error cargando tutoriales.</p>';
+    }
+  }
+
+  loadTutorials();
+</script>
 
 <script is:inline define:vars={{ apiUrl }}>
   async function loadTutorials() {

@@ -41,11 +41,57 @@ const apiUrl = import.meta.env.PUBLIC_API_URL;
       })();
     </script>
 
-    <div class="flex h-screen overflow-hidden">
+    <!-- Mobile topbar -->
+    <header class="md:hidden fixed top-0 inset-x-0 z-40 h-14 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4">
+      <span class="text-lg font-bold text-brand-500">LBOT</span>
+      <button id="sidebar-toggle" aria-label="Abrir menu"
+        class="flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-lg hover:bg-gray-800 transition">
+        <span class="block w-5 h-0.5 bg-gray-300 transition-all duration-300" id="sb-bar1"></span>
+        <span class="block w-5 h-0.5 bg-gray-300 transition-all duration-300" id="sb-bar2"></span>
+        <span class="block w-5 h-0.5 bg-gray-300 transition-all duration-300" id="sb-bar3"></span>
+      </button>
+    </header>
+
+    <!-- Overlay mobile -->
+    <div id="sidebar-overlay" class="hidden md:hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm" onclick="closeSidebar()"></div>
+
+    <div class="flex h-screen overflow-hidden pt-14 md:pt-0">
       <Sidebar pathname={Astro.url.pathname} />
-      <main class="flex-1 overflow-y-auto p-8">
+      <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
         <slot />
       </main>
     </div>
+
+    <script is:inline>
+      var sidebarEl    = document.getElementById('sidebar-drawer');
+      var overlay      = document.getElementById('sidebar-overlay');
+      var sbBar1       = document.getElementById('sb-bar1');
+      var sbBar2       = document.getElementById('sb-bar2');
+      var sbBar3       = document.getElementById('sb-bar3');
+      var sidebarOpen  = false;
+
+      function closeSidebar() {
+        sidebarOpen = false;
+        if (sidebarEl) sidebarEl.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        if (sbBar1) { sbBar1.style.transform = ''; sbBar2.style.opacity = '1'; sbBar3.style.transform = ''; }
+      }
+
+      var toggle = document.getElementById('sidebar-toggle');
+      if (toggle) {
+        toggle.addEventListener('click', function() {
+          sidebarOpen = !sidebarOpen;
+          if (sidebarOpen) {
+            if (sidebarEl) sidebarEl.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            sbBar1.style.transform = 'translateY(8px) rotate(45deg)';
+            sbBar2.style.opacity   = '0';
+            sbBar3.style.transform = 'translateY(-8px) rotate(-45deg)';
+          } else {
+            closeSidebar();
+          }
+        });
+      }
+    </script>
   </body>
 </html>

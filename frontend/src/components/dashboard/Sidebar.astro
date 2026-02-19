@@ -1,7 +1,7 @@
 ---
 /**
  * Sidebar.astro
- * Menú lateral del dashboard con enlace activo resaltado.
+ * Menú lateral del dashboard. En mobile es un drawer desde la izquierda.
  */
 interface Props { pathname?: string; }
 
@@ -9,30 +9,39 @@ const apiUrl  = import.meta.env.PUBLIC_API_URL;
 const { pathname = Astro.url.pathname } = Astro.props;
 
 const links = [
-  { href: '/dashboard',            label: 'Resumen'    },
-  { href: '/dashboard/downloads',  label: 'Descargas'  },
-  { href: '/dashboard/tutorials',  label: 'Tutoriales' },
-  { href: '/dashboard/buy',        label: 'Comprar Bot'},
+  { href: '/dashboard',            label: 'Resumen',     icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { href: '/dashboard/downloads',  label: 'Descargas',   icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
+  { href: '/dashboard/tutorials',  label: 'Tutoriales',  icon: 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { href: '/dashboard/buy',        label: 'Comprar Bot', icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z' },
 ];
 ---
-<aside class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col h-screen">
+<aside
+  id="sidebar-drawer"
+  class="fixed md:relative inset-y-0 left-0 z-40 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out
+         w-64 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0 md:h-screen">
+
   <!-- Logo -->
   <div class="px-6 py-5 border-b border-gray-800">
     <span class="text-xl font-bold text-brand-500">LBOT</span>
+    <span class="text-xs text-gray-600 ml-1">dashboard</span>
   </div>
 
   <!-- Navegación -->
-  <nav class="flex-1 px-4 py-6 space-y-1">
-    {links.map(({ href, label }) => {
+  <nav class="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+    {links.map(({ href, label, icon }) => {
       const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
       return (
         <a
           href={href}
-          class={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition text-sm font-medium ${
+          onclick="document.getElementById('sidebar-drawer')?.classList.add('-translate-x-full'); document.getElementById('sidebar-overlay')?.classList.add('hidden');"
+          class={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition text-sm font-medium group ${
             isActive
               ? 'bg-brand-600/20 text-brand-400 border border-brand-600/30'
               : 'text-gray-400 hover:text-white hover:bg-gray-800'
           }`}>
+          <svg class="w-4.5 h-4.5 w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d={icon} />
+          </svg>
           {label}
         </a>
       );
@@ -40,11 +49,14 @@ const links = [
   </nav>
 
   <!-- Logout -->
-  <div class="px-4 py-4 border-t border-gray-800">
+  <div class="px-3 py-4 border-t border-gray-800">
     <button
       id="btn-logout"
-      class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-gray-800 transition text-sm font-medium w-full">
-      Cerrar sesión
+      class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition text-sm font-medium w-full">
+      <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+      </svg>
+      Cerrar sesi&oacute;n
     </button>
   </div>
 </aside>
