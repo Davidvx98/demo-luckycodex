@@ -9,6 +9,7 @@ frontend/.env
 backend/.env
 
 # Build outputs
+dist/
 frontend/dist/
 frontend/.astro/
 
