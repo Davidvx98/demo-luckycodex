@@ -63,10 +63,13 @@ const links = [
 
 <script is:inline define:vars={{ apiUrl }}>
   document.getElementById('btn-logout')?.addEventListener('click', async () => {
-    await fetch(`${apiUrl}/api/auth/logout`, {
-      method:      'POST',
-      credentials: 'include',
-    });
+    localStorage.removeItem('lbot_demo_session');
+    try {
+      await fetch(apiUrl + '/api/auth/logout', {
+        method:      'POST',
+        credentials: 'include',
+      });
+    } catch { /* API offline en modo demo — ignorar */ }
     window.location.href = '/';
   });
 </script>

@@ -11,6 +11,9 @@ const apiUrl = import.meta.env.PUBLIC_API_URL;
 </DashboardLayout>
 
 <script is:inline define:vars={{ apiUrl }}>
+  var DEMO_KEY       = 'lbot_demo_session';
+  var DEMO_TUTORIALS = ['Introducci\u00f3n al bot', 'Configuraci\u00f3n avanzada'];
+
   // Mapeo nombre → slug y metadatos
   var TUTORIAL_META = {
     'Introducci\u00f3n al bot': {
@@ -39,12 +42,44 @@ const apiUrl = import.meta.env.PUBLIC_API_URL;
     'Elite':  'bg-amber-600/20 text-amber-400',
   };
 
+  function renderCards(tutorials) {
+    var el = document.getElementById('tutorials-content');
+    if (!el) return;
+    el.innerHTML = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">' +
+      tutorials.map(function(name) {
+        var meta  = TUTORIAL_META[name] || { slug: 'intro', desc: name, duration: '', badge: 'B\u00e1sico' };
+        var color = BADGE_COLOR[meta.badge] || 'bg-gray-700/30 text-gray-400';
+        return '<a href="/dashboard/tutorials/' + meta.slug + '" ' +
+          'class="bg-gray-900 border border-gray-800 hover:border-brand-600/60 rounded-2xl p-5 flex flex-col gap-3 transition-all hover:bg-gray-900/80 hover:-translate-y-0.5 group cursor-pointer">' +
+          '<div class="flex items-start justify-between gap-2">' +
+            '<div class="p-2.5 bg-brand-600/10 rounded-xl shrink-0 group-hover:bg-brand-600/20 transition">' +
+              '<svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">' +
+                '<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>' +
+                '<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>' +
+              '</svg>' +
+            '</div>' +
+            '<span class="text-xs font-semibold px-2 py-1 rounded-full ' + color + '">' + meta.badge + '</span>' +
+          '</div>' +
+          '<div>' +
+            '<h3 class="text-white font-semibold text-sm mb-1 group-hover:text-brand-300 transition">' + name + '</h3>' +
+            '<p class="text-gray-500 text-xs leading-relaxed">' + meta.desc + '</p>' +
+          '</div>' +
+          (meta.duration ? '<div class="flex items-center gap-1.5 text-xs text-gray-600 mt-auto pt-1">' +
+            '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>' +
+            meta.duration + '<span class="text-gray-700">&middot;</span><span class="text-brand-500/70">Ver v&iacute;deo &rarr;</span>' +
+          '</div>' : '') +
+          '</a>';
+      }).join('') +
+    '</div>' +
+    '<p class="text-xs text-gray-600 mt-6">Los tutoriales se actualizan con cada nueva versi\u00f3n del bot.</p>';
+  }
+
   async function loadTutorials() {
     var el = document.getElementById('tutorials-content');
     if (!el) return;
     try {
       var res = await fetch(apiUrl + '/api/dashboard/tutorials', { credentials: 'include' });
-      if (!res.ok) { window.location.href = '/'; return; }
+      if (!res.ok) throw new Error('not ok');
       var data = await res.json();
       var tutorials = data.tutorials;
 
@@ -53,84 +88,14 @@ const apiUrl = import.meta.env.PUBLIC_API_URL;
         return;
       }
 
-      el.innerHTML = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">' +
-        tutorials.map(function(name) {
-          var meta  = TUTORIAL_META[name] || { slug: 'intro', desc: name, duration: '', badge: 'B\u00e1sico' };
-          var color = BADGE_COLOR[meta.badge] || 'bg-gray-700/30 text-gray-400';
-          return '<a href="/dashboard/tutorials/' + meta.slug + '" ' +
-            'class="bg-gray-900 border border-gray-800 hover:border-brand-600/60 rounded-2xl p-5 flex flex-col gap-3 transition-all hover:bg-gray-900/80 hover:-translate-y-0.5 group cursor-pointer">' +
-            '<div class="flex items-start justify-between gap-2">' +
-              '<div class="p-2.5 bg-brand-600/10 rounded-xl shrink-0 group-hover:bg-brand-600/20 transition">' +
-                '<svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">' +
-                  '<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>' +
-                  '<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>' +
-                '</svg>' +
-              '</div>' +
-              '<span class="text-xs font-semibold px-2 py-1 rounded-full ' + color + '">' + meta.badge + '</span>' +
-            '</div>' +
-            '<div>' +
-              '<h3 class="text-white font-semibold text-sm mb-1 group-hover:text-brand-300 transition">' + name + '</h3>' +
-              '<p class="text-gray-500 text-xs leading-relaxed">' + meta.desc + '</p>' +
-            '</div>' +
-            (meta.duration ? '<div class="flex items-center gap-1.5 text-xs text-gray-600 mt-auto pt-1">' +
-              '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>' +
-              meta.duration +
-              '<span class="text-gray-700">&middot;</span><span class="text-brand-500/70">Ver v&iacute;deo &rarr;</span>' +
-            '</div>' : '') +
-            '</a>';
-        }).join('') +
-      '</div>' +
-      '<p class="text-xs text-gray-600 mt-6">Los tutoriales se actualizan con cada nueva versi\u00f3n del bot.</p>';
+      renderCards(tutorials);
 
     } catch (e) {
-      el.innerHTML = '<p class="text-red-400">Error cargando tutoriales.</p>';
-    }
-  }
-
-  loadTutorials();
-</script>
-
-<script is:inline define:vars={{ apiUrl }}>
-  async function loadTutorials() {
-    const el = document.getElementById('tutorials-content');
-    if (!el) return;
-    try {
-      const res = await fetch(`${apiUrl}/api/dashboard/tutorials`, { credentials: 'include' });
-      if (!res.ok) { window.location.href = '/'; return; }
-      const { tutorials } = await res.json();
-
-      if (!tutorials.length) {
-        el.innerHTML = '<p class="text-gray-500">No hay tutoriales disponibles con tu plan actual.</p>';
-        return;
+      if (localStorage.getItem(DEMO_KEY)) {
+        renderCards(DEMO_TUTORIALS);
+      } else {
+        el.innerHTML = '<p class="text-red-400">Error cargando tutoriales.</p>';
       }
-
-      const icons = [
-        'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
-        'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
-        'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
-      ];
-
-      el.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          ${tutorials.map((name, i) => `
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 flex items-start gap-4 hover:border-brand-600/50 transition cursor-pointer"
-                 onclick="alert('Demo: tutorial \'${name}\' próximamente disponible.')">
-              <div class="p-2 bg-brand-600/10 rounded-lg shrink-0">
-                <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="${icons[i % icons.length]}"/>
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-white font-semibold text-sm mb-1">${name}</h3>
-                <p class="text-gray-500 text-xs">Haz clic para ver el tutorial completo.</p>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-        <p class="text-xs text-gray-600 mt-6">Los tutoriales se actualizan con cada nueva versión del bot.</p>
-      `;
-    } catch {
-      el.innerHTML = '<p class="text-red-400">Error cargando tutoriales.</p>';
     }
   }
 

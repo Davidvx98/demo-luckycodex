@@ -26,17 +26,21 @@ const apiUrl = import.meta.env.PUBLIC_API_URL;
     />
   </head>
   <body class="bg-gray-950 text-white font-sans antialiased">
-    <!-- Verificación de sesión — redirige si no hay cookie válida -->
+    <!-- Verificación de sesión — redirige si no hay cookie válida ni sesión demo -->
     <script is:inline define:vars={{ apiUrl }}>
       (async () => {
+        var DEMO_KEY = 'lbot_demo_session';
         try {
           const res = await fetch(
             `${apiUrl}/api/auth/me`,
             { credentials: 'include' }
           );
-          if (!res.ok) window.location.href = '/';
+          if (!res.ok) {
+            if (!localStorage.getItem(DEMO_KEY)) window.location.href = '/';
+          }
         } catch {
-          window.location.href = '/';
+          // API offline — permitir si hay sesión demo
+          if (!localStorage.getItem(DEMO_KEY)) window.location.href = '/';
         }
       })();
     </script>

@@ -170,6 +170,20 @@ const API              = import.meta.env.PUBLIC_API_URL;
     btn.querySelector('span').textContent = loading ? 'Cargando...' : (btnId === 'btn-login-submit' ? 'Iniciar sesion' : 'Crear cuenta');
   }
 
+  var DEMO_EMAIL    = 'prueba@lbot.dev';
+  var DEMO_PASSWORD = 'prueba';
+  var DEMO_KEY      = 'lbot_demo_session';
+
+  function setDemoSession() {
+    localStorage.setItem(DEMO_KEY, JSON.stringify({
+      email:           DEMO_EMAIL,
+      name:            'Prueba',
+      plan_name:       'Farmer Pro',
+      plan_expires_at: '2099-12-31',
+      plan_id:         2,
+    }));
+  }
+
   document.getElementById('form-login').addEventListener('submit', async function(e) {
     e.preventDefault();
     setLoading('btn-login-submit', true);
@@ -186,7 +200,14 @@ const API              = import.meta.env.PUBLIC_API_URL;
       showMessage('Bienvenido! Redirigiendo...', false);
       setTimeout(function() { window.location.href = '/dashboard'; }, 800);
     } catch {
-      showMessage('No se puede conectar con el servidor.', true);
+      // API offline — fallback demo local
+      if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
+        setDemoSession();
+        showMessage('Bienvenido! (modo demo) Redirigiendo...', false);
+        setTimeout(function() { window.location.href = '/dashboard'; }, 800);
+      } else {
+        showMessage('Credenciales incorrectas o servidor no disponible.', true);
+      }
     } finally {
       setLoading('btn-login-submit', false);
     }

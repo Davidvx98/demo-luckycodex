@@ -12,32 +12,43 @@ const apiUrl = import.meta.env.PUBLIC_API_URL;
 </div>
 
 <script is:inline define:vars={{ apiUrl }}>
+  var DEMO_KEY = 'lbot_demo_session';
+
+  function renderSummary(summary) {
+    var el = document.getElementById('summary-content');
+    if (!el) return;
+    el.innerHTML =
+      '<div class="grid grid-cols-1 md:grid-cols-3 gap-6">' +
+        '<div class="bg-gray-800 rounded-xl p-6 border border-gray-700">' +
+          '<p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Email</p>' +
+          '<p class="text-white font-medium">' + (summary.email || '—') + '</p>' +
+        '</div>' +
+        '<div class="bg-gray-800 rounded-xl p-6 border border-gray-700">' +
+          '<p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Plan activo</p>' +
+          '<p class="text-brand-500 font-semibold">' + (summary.plan_name || 'Sin plan') + '</p>' +
+        '</div>' +
+        '<div class="bg-gray-800 rounded-xl p-6 border border-gray-700">' +
+          '<p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Expira</p>' +
+          '<p class="text-white font-medium">' + (summary.plan_expires_at || '—') + '</p>' +
+        '</div>' +
+      '</div>';
+  }
+
   async function loadSummary() {
-    const el = document.getElementById('summary-content');
+    var el = document.getElementById('summary-content');
     if (!el) return;
     try {
-      const res  = await fetch(`${apiUrl}/api/dashboard/summary`, { credentials: 'include' });
-      if (!res.ok) { window.location.href = '/'; return; }
-      const { summary } = await res.json();
-
-      el.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Email</p>
-            <p class="text-white font-medium">${summary.email}</p>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Plan activo</p>
-            <p class="text-brand-500 font-semibold">${summary.plan_name ?? 'Sin plan'}</p>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Expira</p>
-            <p class="text-white font-medium">${summary.plan_expires_at ?? '—'}</p>
-          </div>
-        </div>
-      `;
+      var res = await fetch(apiUrl + '/api/dashboard/summary', { credentials: 'include' });
+      if (!res.ok) throw new Error('not ok');
+      var data = await res.json();
+      renderSummary(data.summary);
     } catch {
-      el.innerHTML = '<p class="text-red-400">Error cargando datos.</p>';
+      var demo = localStorage.getItem(DEMO_KEY);
+      if (demo) {
+        renderSummary(JSON.parse(demo));
+      } else {
+        el.innerHTML = '<p class="text-red-400">Error cargando datos.</p>';
+      }
     }
   }
 
