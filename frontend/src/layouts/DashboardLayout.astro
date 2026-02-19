@@ -1,0 +1,51 @@
+---
+/**
+ * DashboardLayout.astro
+ * Layout base para el dashboard privado.
+ * La protección de ruta se hace en el cliente: si no hay sesión, redirige a /.
+ */
+import Sidebar from '../components/dashboard/Sidebar.astro';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Dashboard — LBOT' } = Astro.props;
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+---
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-950 text-white font-sans antialiased">
+    <!-- Verificación de sesión — redirige si no hay cookie válida -->
+    <script is:inline define:vars={{ apiUrl }}>
+      (async () => {
+        try {
+          const res = await fetch(
+            `${apiUrl}/api/auth/me`,
+            { credentials: 'include' }
+          );
+          if (!res.ok) window.location.href = '/';
+        } catch {
+          window.location.href = '/';
+        }
+      })();
+    </script>
+
+    <div class="flex h-screen overflow-hidden">
+      <Sidebar pathname={Astro.url.pathname} />
+      <main class="flex-1 overflow-y-auto p-8">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

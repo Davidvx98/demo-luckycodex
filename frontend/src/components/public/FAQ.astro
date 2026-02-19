@@ -1,0 +1,64 @@
+---
+/**
+ * FAQ.astro
+ * Sección de preguntas frecuentes con acordeón nativo HTML (<details>).
+ * Sin JavaScript extra — usa el comportamiento nativo del navegador.
+ * FASE 2: ampliar preguntas y estilo final.
+ */
+
+const items = [
+  {
+    q: '¿Qué es LBOT?',
+    a: 'LBOT es un bot de farmeo automático para Digimon Masters Online (DMO). Se encarga de mover tu personaje, atacar Digimons, recoger el loot y acumular Teras (la moneda del juego) sin que tengas que estar delante del PC.',
+  },
+  {
+    q: '¿Qué son las Teras y por qué es importante farmearlas?',
+    a: 'Las Teras son la moneda principal de DMO. Se usan para comprar ítems, evolucionar Digimons, hacer merchan y progresar en el juego. Farmearlas manualmente es muy lento y repetitivo — LBOT lo hace por ti de forma continua, 24/7.',
+  },
+  {
+    q: '¿En qué zonas de DMO puede farmear LBOT?',
+    a: 'El plan Básico incluye rutas optimizadas en Dats Area y Western Area. El plan Pro amplía el soporte a Server Farm, Infinite Ice Wall y más zonas de alto rendimiento en Teras.',
+  },
+  {
+    q: '¿LBOT puede ser detectado y baneado?',
+    a: 'Ningún bot es 100% indetectable. LBOT incluye técnicas anti-detección (movimientos humanizados, pausas aleatorias, rotación de rutas) para reducir el riesgo al mínimo. El plan Pro incluye la capa anti-detección mejorada. Úsalo con responsabilidad.',
+  },
+  {
+    q: '¿Funciona con cualquier Digimon y build?',
+    a: 'LBOT es compatible con las builds de farmeo más comunes. Necesitas configurar en el dashboard qué habilidades usar y en qué orden. Para configuraciones avanzadas, el plan Pro incluye soporte personalizado.',
+  },
+  {
+    q: '¿Qué pasa si el juego se actualiza y cambia algo?',
+    a: 'Los dos planes incluyen actualizaciones automáticas. Cuando GDMO lanza un parche que afecte al bot, publicamos una nueva versión en 24-48h y la puedes descargar desde el dashboard.',
+  },
+  {
+    q: '¿Cómo se procesan los pagos?',
+    a: 'Aceptamos tarjeta de crédito/débito (Stripe), PayPal y criptomonedas. Los pagos son procesados íntegramente por los proveedores correspondientes. LBOT nunca almacena datos de tu tarjeta.',
+  },
+  {
+    q: '¿Puedo usar LBOT en varias cuentas a la vez?',
+    a: 'El plan Básico permite 1 cuenta activa simultánea. El plan Pro permite hasta 3 cuentas en paralelo, ideal si quieres multiplicar la generación de Teras.',
+  },
+];
+---
+<section id="faq" class="py-24 bg-gray-950">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 class="text-4xl font-bold text-center text-white mb-16">Preguntas frecuentes</h2>
+    <div class="space-y-3">
+      {items.map(({ q, a }) => (
+        <details class="group bg-gray-800 border border-gray-700 rounded-xl">
+          <summary
+            class="flex justify-between items-center cursor-pointer px-6 py-4 text-white font-medium list-none select-none">
+            {q}
+            <svg
+              class="w-5 h-5 text-gray-400 transition-transform duration-200 group-open:rotate-180"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <p class="px-6 pb-4 text-gray-400 leading-relaxed">{a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

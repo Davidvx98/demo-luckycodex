@@ -1,0 +1,56 @@
+---
+/**
+ * PublicLayout.astro — Layout base con navbar pegajosa
+ */
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title       = 'LBOT — Bot de Farmeo para Digimon Masters Online',
+  description = 'Automatiza el farmeo de Teras en DMO con LBOT. Desde $2/mes.',
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-950 text-white font-sans antialiased">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 inset-x-0 z-50 bg-gray-950/80 backdrop-blur-md border-b border-gray-800/50">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="/" class="text-xl font-bold text-white">
+          L<span class="text-brand-500">BOT</span>
+        </a>
+        <div class="hidden md:flex items-center gap-8 text-sm text-gray-400">
+          <a href="#plans" class="hover:text-white transition">Planes</a>
+          <a href="#faq"   class="hover:text-white transition">FAQ</a>
+          <a href="#auth"  class="hover:text-white transition">Login</a>
+        </div>
+        <a href="#auth"
+           class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg text-sm font-semibold transition">
+          Empezar →
+        </a>
+      </div>
+    </nav>
+
+    <!-- Offset para la navbar fija -->
+    <div class="pt-16">
+      <slot />
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-0 py-8 text-center text-sm text-gray-600">
+      <p>© 2026 LBOT · Bot de farmeo para Digimon Masters Online · Demo técnica</p>
+    </footer>
+
+  </body>
+</html>

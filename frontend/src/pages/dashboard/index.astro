@@ -1,0 +1,19 @@
+---
+/**
+ * dashboard/index.astro — Dashboard privado
+ *
+ * Secciones disponibles (menú lateral):
+ *   - Resumen de cuenta
+ *   - Descargas
+ *   - Tutoriales
+ *   - Comprar Bot
+ *
+ * FASE 1: estructura y stubs.
+ * FASE 6: implementación completa.
+ */
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import AccountSummary  from '../../components/dashboard/AccountSummary.astro';
+---
+<DashboardLayout title="Mi cuenta — LBOT">
+  <AccountSummary />
+</DashboardLayout>

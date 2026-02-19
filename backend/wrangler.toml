@@ -1,0 +1,20 @@
+name = "lbot-backend"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ---- Cloudflare D1 ----
+[[d1_databases]]
+binding = "DB"           # Accesible como env.DB en Workers
+database_name = "lbot-db"
+database_id = "REEMPLAZAR-CON-ID-REAL-DE-D1"
+
+# ---- Variables de entorno (no secretos) ----
+[vars]
+NODE_ENV = "production"
+FRONTEND_URL = "https://tu-dominio.pages.dev"
+
+# Los secretos se añaden con:
+# wrangler secret put JWT_SECRET
+# wrangler secret put GOOGLE_CLIENT_SECRET
+# etc.

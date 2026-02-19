@@ -1,0 +1,25 @@
+---
+/**
+ * index.astro — One-page pública
+ *
+ * Secciones (en orden):
+ *   1. Hero con CTA
+ *   2. Planes (cards)
+ *   3. FAQ (acordeón)
+ *   4. Login / Registro
+ *
+ * FASE 1: estructura y stubs.
+ * FASE 2: implementación completa de cada componente.
+ */
+import PublicLayout from '../layouts/PublicLayout.astro';
+import Hero     from '../components/public/Hero.astro';
+import Plans    from '../components/public/Plans.astro';
+import FAQ      from '../components/public/FAQ.astro';
+import AuthForm from '../components/public/AuthForm.astro';
+---
+<PublicLayout>
+  <Hero />
+  <Plans />
+  <FAQ />
+  <AuthForm />
+</PublicLayout>

@@ -1,0 +1,16 @@
+{
+  "name": "lbot-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev":          "pnpm --parallel run dev",
+    "dev:frontend": "pnpm --filter lbot-frontend dev",
+    "dev:backend":  "pnpm --filter lbot-backend  dev",
+    "build":        "pnpm --filter lbot-frontend build",
+    "seed":         "pnpm --filter lbot-backend  seed",
+    "check":        "pnpm --filter lbot-frontend check"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["argon2", "better-sqlite3", "esbuild", "sharp"]
+  }
+}

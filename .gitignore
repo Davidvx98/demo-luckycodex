@@ -1,0 +1,29 @@
+# Dependencias
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Variables de entorno — NUNCA al repositorio
+.env
+frontend/.env
+backend/.env
+
+# Build outputs
+frontend/dist/
+frontend/.astro/
+
+# DB local de desarrollo
+*.db
+*.db-shm
+*.db-wal
+
+# Wrangler
+.wrangler/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/settings.json
+*.swp

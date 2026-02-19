@@ -1,0 +1,66 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+<DashboardLayout title="Comprar Bot — LBOT">
+  <h1 class="text-2xl font-bold text-white mb-2">Comprar Bot</h1>
+  <p class="text-gray-400 mb-10">Elige el plan que mejor se adapte a tus necesidades de farmeo.</p>
+
+  <!-- Plan cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
+
+    <!-- Plan Básico -->
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col">
+      <div class="mb-4">
+        <h2 class="text-white font-bold text-lg">Farmer Básico</h2>
+        <div class="flex items-end gap-1 mt-2">
+          <span class="text-4xl font-extrabold text-white">$2</span>
+          <span class="text-gray-500 mb-1">/mes</span>
+        </div>
+      </div>
+      <ul class="space-y-2 text-sm text-gray-400 flex-1 mb-6">
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Farmeo en 1 zona simultanea</li>
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Recogida automática de Teras</li>
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Soporte por Discord</li>
+        <li class="flex items-center gap-2"><span class="text-gray-600">✗</span> Modos avanzados de farmeo</li>
+      </ul>
+      <button
+        onclick="alert('Demo: integración de pago en Fase 5 (PayPal/Stripe/Crypto).')"
+        class="w-full py-3 rounded-xl bg-gray-700 hover:bg-gray-600 text-white font-semibold text-sm transition">
+        Seleccionar Básico
+      </button>
+    </div>
+
+    <!-- Plan Pro -->
+    <div class="bg-gray-900 border-2 border-brand-600 rounded-2xl p-6 flex flex-col relative">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+        <span class="bg-brand-600 text-white text-xs font-bold px-4 py-1 rounded-full">
+          Más popular
+        </span>
+      </div>
+      <div class="mb-4">
+        <h2 class="text-white font-bold text-lg">Farmer Pro</h2>
+        <div class="flex items-end gap-1 mt-2">
+          <span class="text-4xl font-extrabold text-brand-400">$5</span>
+          <span class="text-gray-500 mb-1">/mes</span>
+        </div>
+      </div>
+      <ul class="space-y-2 text-sm text-gray-300 flex-1 mb-6">
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Farmeo en 3 zonas simultáneas</li>
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Recogida automática de Teras</li>
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Soporte prioritario por Discord</li>
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Modos avanzados de farmeo</li>
+        <li class="flex items-center gap-2"><span class="text-green-400">✓</span> Actualizaciones prioritarias</li>
+      </ul>
+      <button
+        onclick="alert('Demo: integración de pago en Fase 5 (PayPal/Stripe/Crypto).')"
+        class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition">
+        Seleccionar Pro
+      </button>
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-600 mt-8">
+    Los pagos se procesan de forma segura. Métodos disponibles: PayPal · Stripe · Crypto.
+    <br />Esta funcionalidad estará disponible en la versión completa.
+  </p>
+</DashboardLayout>

@@ -1,0 +1,54 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+---
+<DashboardLayout title="Descargas — LBOT">
+  <h1 class="text-2xl font-bold text-white mb-8">Descargas</h1>
+
+  <div id="downloads-content" class="text-gray-400">Cargando...</div>
+</DashboardLayout>
+
+<script is:inline define:vars={{ apiUrl }}>
+  async function loadDownloads() {
+    const el = document.getElementById('downloads-content');
+    if (!el) return;
+    try {
+      const res = await fetch(`${apiUrl}/api/dashboard/downloads`, { credentials: 'include' });
+      if (!res.ok) { window.location.href = '/'; return; }
+      const { downloads } = await res.json();
+
+      if (!downloads.length) {
+        el.innerHTML = '<p class="text-gray-500">No hay archivos disponibles con tu plan actual.</p>';
+        return;
+      }
+
+      el.innerHTML = `
+        <div class="space-y-3">
+          ${downloads.map(file => `
+            <div class="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-xl px-6 py-4">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-brand-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span class="text-white font-medium text-sm">${file}</span>
+              </div>
+              <button
+                class="flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300 font-medium transition"
+                onclick="alert('Demo: descarga de ${file} simulada.')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Descargar
+              </button>
+            </div>
+          `).join('')}
+        </div>
+        <p class="text-xs text-gray-600 mt-6">Los archivos están disponibles según tu plan activo.</p>
+      `;
+    } catch {
+      el.innerHTML = '<p class="text-red-400">Error cargando descargas.</p>';
+    }
+  }
+
+  loadDownloads();
+</script>
