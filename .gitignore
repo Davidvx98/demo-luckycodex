@@ -13,8 +13,7 @@ dist/
 frontend/dist/
 frontend/.astro/
 
-# DB local de desarrollo
-*.db
+# DB — lbot-dev.db se sube para demo (backend necesita la DB seedeada)
 *.db-shm
 *.db-wal
 
